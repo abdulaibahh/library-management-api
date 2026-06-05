@@ -23,3 +23,19 @@ class UserService:
         stmt = select(User).where(User.id == user_id)
         result = await db.execute(stmt)
         return result.scalar_one_or_none()
+
+    async def update_user(self, db: AsyncSession, user: User, **data) -> User:
+        for k, v in data.items():
+            if k == "password":
+                # password should be hashed by caller
+                setattr(user, "password_hash", v)
+            else:
+                setattr(user, k, v)
+        db.add(user)
+        await db.commit()
+        await db.refresh(user)
+        return user
+
+    async def delete_user(self, db: AsyncSession, user: User) -> None:
+        await db.delete(user)
+        await db.commit()
