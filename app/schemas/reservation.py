@@ -14,3 +14,11 @@ class ReservationRead(ReservationBase):
 
     class Config:
         orm_mode = True
+
+
+class ReservationCreate(BaseModel):
+    book_id: int
+
+
+class ReservationUpdate(BaseModel):
+    status: str | None = None
