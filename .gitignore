@@ -1,0 +1,21 @@
+# Virtual Environment
+venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# Environment Variables
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# AI Planning Files
+prompt.md
+project_plan.md
+
+# OS Files
+.DS_Store
+Thumbs.db
