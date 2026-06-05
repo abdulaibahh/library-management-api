@@ -1,11 +1,12 @@
 from datetime import datetime
-from sqlalchemy import DateTime, Enum, ForeignKey, Integer
+from enum import Enum as PyEnum
+from sqlalchemy import DateTime, Enum as SAEnum, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
 
 
-class BorrowingStatus(str, Enum):
+class BorrowingStatus(str, PyEnum):
     pending = "pending"
     borrowed = "borrowed"
     returned = "returned"
@@ -21,7 +22,11 @@ class Borrowing(Base):
     borrow_date: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
     due_date: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     return_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
-    status: Mapped[str] = mapped_column(Enum(BorrowingStatus), default=BorrowingStatus.borrowed, nullable=False)
+    status: Mapped[BorrowingStatus] = mapped_column(
+        SAEnum(BorrowingStatus, native_enum=False),
+        default=BorrowingStatus.borrowed,
+        nullable=False,
+    )
 
     user: Mapped["User"] = relationship("User", back_populates="borrowings")
     book: Mapped["Book"] = relationship("Book", back_populates="borrowings")

@@ -30,6 +30,19 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
+    # seed default roles
+    roles_table = sa.table(
+        'roles',
+        sa.column('name', sa.String()),
+    )
+    op.bulk_insert(
+        roles_table,
+        [
+            {'name': 'student'},
+            {'name': 'librarian'},
+            {'name': 'admin'},
+        ],
+    )
     op.create_table('books',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('title', sa.String(length=255), nullable=False),

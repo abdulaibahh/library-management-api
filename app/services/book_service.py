@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -33,6 +35,6 @@ class BookService:
     async def delete(self, db: AsyncSession, book: Book) -> None:
         await db.delete(book)
         await db.commit()
-class BookService:
+
     async def list_books(self) -> list[dict]:
         raise NotImplementedError()

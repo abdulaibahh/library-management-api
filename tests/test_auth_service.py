@@ -17,4 +17,3 @@ def test_create_and_decode_token():
     payload = decode_access_token(token)
     assert payload is not None
     assert payload.get("sub") == "user@example.com"
-*** End Patch

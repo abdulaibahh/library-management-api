@@ -1,7 +1,11 @@
-"""Generic Alembic script template."""
+"""${message}
+
+Revision ID: ${up_revision}
+Revises: ${down_revision | comma,n}
+Create Date: ${create_date}
+"""
 from alembic import op
 import sqlalchemy as sa
-
 
 # revision identifiers, used by Alembic.
 revision = "${up_revision}"
@@ -10,13 +14,9 @@ branch_labels = ${repr(branch_labels)}
 depends_on = ${repr(depends_on)}
 
 
-def upgrade():
-% for stmt in upgrade_ops:
-    ${stmt}
-% endfor
+def upgrade() -> None:
+${upgrades if upgrades else '    pass'}
 
 
-def downgrade():
-% for stmt in downgrade_ops:
-    ${stmt}
-% endfor
+def downgrade() -> None:
+${downgrades if downgrades else '    pass'}
