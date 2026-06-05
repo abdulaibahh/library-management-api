@@ -16,3 +16,13 @@ class BorrowingRead(BorrowingBase):
 
     class Config:
         orm_mode = True
+
+
+class BorrowingCreate(BaseModel):
+    book_id: int
+    due_date: datetime
+
+
+class BorrowingUpdate(BaseModel):
+    return_date: datetime | None = None
+    status: str | None = None
