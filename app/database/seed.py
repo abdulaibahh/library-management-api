@@ -1,4 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 
 from app.core.roles import UserRole
 from app.core.security import hash_password
@@ -7,12 +8,21 @@ from app.models.user import User
 
 
 async def seed_initial_data(session: AsyncSession) -> None:
-    admin_role = Role(name=UserRole.admin.value)
-    librarian_role = Role(name=UserRole.librarian.value)
-    student_role = Role(name=UserRole.student.value)
+    roles: dict[str, Role] = {}
+    for role_name in (UserRole.admin.value, UserRole.librarian.value, UserRole.student.value):
+        result = await session.execute(select(Role).where(Role.name == role_name))
+        role = result.scalar_one_or_none()
+        if role is None:
+            role = Role(name=role_name)
+            session.add(role)
+            await session.flush()
+        roles[role_name] = role
 
-    session.add_all([admin_role, librarian_role, student_role])
-    await session.commit()
+    result = await session.execute(select(User).where(User.email == "admin@library.local"))
+    admin_user = result.scalar_one_or_none()
+    if admin_user is not None:
+        await session.commit()
+        return
 
     admin_user = User(
         first_name="Admin",
@@ -20,7 +30,7 @@ async def seed_initial_data(session: AsyncSession) -> None:
         email="admin@library.local",
         phone="0000000000",
         password_hash=hash_password("admin123"),
-        role=admin_role,
+        role=roles[UserRole.admin.value],
     )
     session.add(admin_user)
     await session.commit()

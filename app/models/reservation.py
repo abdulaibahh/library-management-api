@@ -4,6 +4,7 @@ from sqlalchemy import DateTime, Enum as SAEnum, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
+from app.utils.time import utc_now
 
 
 class ReservationStatus(str, PyEnum):
@@ -18,7 +19,7 @@ class Reservation(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     book_id: Mapped[int] = mapped_column(ForeignKey("books.id"), nullable=False)
-    reservation_date: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+    reservation_date: Mapped[datetime] = mapped_column(DateTime, default=utc_now, nullable=False)
     status: Mapped[ReservationStatus] = mapped_column(
         SAEnum(ReservationStatus, native_enum=False),
         default=ReservationStatus.active,

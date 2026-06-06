@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from datetime import datetime
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.reservation import Reservation, ReservationStatus
 from app.models.book import Book
+from app.utils.time import utc_now
 
 
 class ReservationService:
@@ -17,7 +17,7 @@ class ReservationService:
         if not book:
             raise ValueError("Book not found")
 
-        reservation = Reservation(user_id=user_id, book_id=book_id, reservation_date=datetime.utcnow(), status=ReservationStatus.active)
+        reservation = Reservation(user_id=user_id, book_id=book_id, reservation_date=utc_now(), status=ReservationStatus.active)
         db.add(reservation)
         await db.commit()
         await db.refresh(reservation)

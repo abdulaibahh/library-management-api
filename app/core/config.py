@@ -1,5 +1,6 @@
 from typing import Optional
 
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings
 
 
@@ -18,10 +19,13 @@ class Settings(BaseSettings):
     DATABASE_USER: Optional[str] = None
     DATABASE_PASSWORD: Optional[str] = None
 
-    SECRET_KEY: str
-    ALGORITHM: str = "HS256"
+    SECRET_KEY: str = Field(validation_alias=AliasChoices("SECRET_KEY", "JWT_SECRET_KEY"))
+    ALGORITHM: str = Field(default="HS256", validation_alias=AliasChoices("ALGORITHM", "JWT_ALGORITHM"))
 
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(
+        default=30,
+        validation_alias=AliasChoices("ACCESS_TOKEN_EXPIRE_MINUTES", "JWT_EXPIRATION_MINUTES"),
+    )
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
     @property

@@ -3,6 +3,7 @@ from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
+from app.utils.time import utc_now
 
 
 class Book(Base):
@@ -18,7 +19,7 @@ class Book(Base):
     quantity: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     available_quantity: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     category_id: Mapped[int] = mapped_column(ForeignKey("categories.id"), nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utc_now, nullable=False)
 
     category: Mapped["Category"] = relationship("Category", back_populates="books")
     borrowings: Mapped[list["Borrowing"]] = relationship("Borrowing", back_populates="book")

@@ -41,7 +41,7 @@ async def update_user(user_id: int, payload: UserCreate, db: AsyncSession = Depe
     user = await service.get_user_by_id(db, user_id)
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-    data = payload.dict()
+    data = payload.model_dump()
     if "password" in data:
         data["password_hash"] = await AuthService.hash_password(data.pop("password"))
     updated = await service.update_user(db, user, **data)

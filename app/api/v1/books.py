@@ -19,7 +19,7 @@ async def list_books(db: AsyncSession = Depends(get_db)):
 
 @router.post("/", response_model=BookRead, summary="Create book")
 async def create_book(payload: BookBase, db: AsyncSession = Depends(get_db), current_user=Depends(require_roles("admin", "librarian"))):
-    data = payload.dict()
+    data = payload.model_dump()
     book = await book_service.create(db, data)
     return book
 
@@ -37,7 +37,7 @@ async def update_book(book_id: int, payload: BookBase, db: AsyncSession = Depend
     book = await book_service.get(db, book_id)
     if not book:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
-    updated = await book_service.update(db, book, **payload.dict())
+    updated = await book_service.update(db, book, **payload.model_dump())
     return updated
 
 

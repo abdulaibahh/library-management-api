@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.borrowing import Borrowing, BorrowingStatus
 from app.models.book import Book
+from app.utils.time import utc_now
 
 
 class BorrowingService:
@@ -48,7 +49,7 @@ class BorrowingService:
     async def return_book(self, db: AsyncSession, borrowing: Borrowing, return_date: datetime | None = None) -> Borrowing:
         if borrowing.return_date:
             return borrowing
-        borrowing.return_date = return_date or datetime.utcnow()
+        borrowing.return_date = return_date or utc_now()
         borrowing.status = BorrowingStatus.returned
 
         # increase book available quantity

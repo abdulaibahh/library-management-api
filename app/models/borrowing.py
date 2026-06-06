@@ -4,6 +4,7 @@ from sqlalchemy import DateTime, Enum as SAEnum, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
+from app.utils.time import utc_now
 
 
 class BorrowingStatus(str, PyEnum):
@@ -19,7 +20,7 @@ class Borrowing(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     book_id: Mapped[int] = mapped_column(ForeignKey("books.id"), nullable=False)
-    borrow_date: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+    borrow_date: Mapped[datetime] = mapped_column(DateTime, default=utc_now, nullable=False)
     due_date: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     return_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     status: Mapped[BorrowingStatus] = mapped_column(

@@ -1,4 +1,3 @@
-from datetime import datetime
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -7,6 +6,7 @@ from app.models.book import Book
 from app.models.category import Category
 from app.models.borrowing import Borrowing, BorrowingStatus
 from app.models.reservation import Reservation, ReservationStatus
+from app.utils.time import utc_now
 
 
 class DashboardService:
@@ -22,7 +22,7 @@ class DashboardService:
         total_overdue = (await db.execute(
             select(func.count()).select_from(Borrowing).where(
                 Borrowing.status == BorrowingStatus.borrowed,
-                Borrowing.due_date < datetime.utcnow(),
+                Borrowing.due_date < utc_now(),
             )
         )).scalar_one()
 

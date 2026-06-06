@@ -1,4 +1,3 @@
-from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -9,6 +8,7 @@ from app.schemas.borrowing import BorrowingRead, BorrowingCreate, BorrowingUpdat
 from app.services.borrowing_service import BorrowingService
 from app.services.user_service import UserService
 from app.models.user import User
+from app.utils.time import utc_now
 
 router = APIRouter()
 
@@ -42,7 +42,7 @@ async def return_book(borrowing_id: int, db: AsyncSession = Depends(get_db), cur
     if borrowing.user_id != current_user.id and current_user.role.name != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not permitted to return this borrowing")
 
-    returned = await borrowing_service.return_book(db, borrowing, return_date=datetime.utcnow())
+    returned = await borrowing_service.return_book(db, borrowing, return_date=utc_now())
     return returned
 
 
