@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from __future__ import annotations
-
 from datetime import datetime
-from sqlalchemy import select, update
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
 
 from app.models.borrowing import Borrowing, BorrowingStatus
 from app.models.book import Book
